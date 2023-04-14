@@ -1,28 +1,53 @@
 {
   "name": "vfdetection",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.17.11",
-    "@tensorflow/tfjs": "^4.2.0",
-    "@tensorflow/tfjs-react-native": "^0.8.0",
-    "expo": "~48.0.9",
+    "@react-native-masked-view/masked-view": "0.2.8",
+    "@react-navigation/native": "^6.1.6",
+    "@react-navigation/native-stack": "^6.9.12",
+    "@react-navigation/stack": "^6.3.16",
+    "@tensorflow-models/mobilenet": "2.1.0",
+    "@tensorflow/tfjs": "3.7.0",
+    "@tensorflow/tfjs-react-native": "0.8.0",
+    "base-64": "^1.0.0",
+    "expo": "~48.0.10",
+    "expo-asset": "~8.9.1",
     "expo-camera": "~13.2.1",
     "expo-file-system": "~15.2.2",
     "expo-gl": "~12.4.0",
+    "expo-gl-cpp": "11.4.0",
+    "expo-image-picker": "~14.1.1",
+    "expo-splash-screen": "~0.18.1",
+    "expo-sqlite": "~11.1.1",
     "expo-status-bar": "~1.4.4",
+    "fs": "^0.0.1-security",
     "react": "18.2.0",
-    "react-native": "0.71.4",
-    "react-native-fs": "^2.20.0"
+    "react-native": "0.71.6",
+    "react-native-base64": "^0.2.1",
+    "react-native-fs": "^2.20.0",
+    "react-native-gesture-handler": "~2.9.0",
+    "react-native-paper": "4.12.0",
+    "react-native-safe-area-context": "4.5.0",
+    "react-native-screens": "~3.20.0",
+    "react-native-shadow-2": "^7.0.6",
+    "react-native-svg": "13.4.0",
+    "react-native-v-crypto": "^1.0.0",
+    "react-query": "^3.39.3",
+    "ssh2": "^1.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.0.27",
+    "@types/react-native": "^0.71.5",
+    "babel-plugin-module-resolver": "^5.0.0",
+    "typescript": "^4.9.4"
   },
   "private": true
 }

@@ -21,7 +21,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.huypham.vfdetector"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +36,14 @@
         "projectId": "fa7d19bc-bab1-45f8-9e67-610986a2d5e6"
       }
     },
-    "owner": "huyhamada"
+    "owner": "huyhamada",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ]
   }
 }

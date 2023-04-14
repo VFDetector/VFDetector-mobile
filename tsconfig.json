@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "jsx": "react-native",
+    "paths": {
+      "src": [
+        "./src"
+      ]
+    }
+  },
+  "extends": "expo/tsconfig.base"
+}
