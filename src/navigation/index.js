@@ -3,11 +3,12 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../screens/home";
-import MainTabs from "./tabs";
+// import MainTabs from "./tabs";
 import AppInitiation from "src/screens/user/splash/initiation";
 import Login from "src/screens/user/login";
 import LoginSplash from "src/screens/user/splash/login";
 // import FoodScan from 'src/screens/scan';
+import Profile from "src/screens/user/profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,20 +22,32 @@ export default () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="user-login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="splash-login"
           component={LoginSplash}
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="user-profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
+        {/* 
+        <Stack.Screen
           name="MainTabs"
           component={MainTabs}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="user-login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
+         */}
         {/* <Stack.Screen
           name="detection-scan"
           component={FoodScan}

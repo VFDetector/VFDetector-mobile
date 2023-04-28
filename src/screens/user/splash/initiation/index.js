@@ -2,29 +2,32 @@ import React, { useEffect } from "react";
 import { Image, View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import assets from "src/assets";
-import { SafeLayout } from "src/layout";
+import { SafeLayout } from "src/layouts";
 import screen from "src/utils/screen";
-import localDatabase from "src/utils/localDatabase";
-import { useLocalDatabase } from "src/contexts/localDatabase";
+// import localDatabase from "src/utils/localDatabase";
+// import { useLocalDatabase } from "src/contexts/localDatabase";
 import ModelManager from "src/utils/models";
 
 const AppInitiation = ({ navigation }) => {
   const { colors } = useTheme();
-  const { updateDatabase } = useLocalDatabase();
-  const init = async () => {
-    try {
-      const database = await localDatabase.init();
+  // const { updateDatabase } = useLocalDatabase();
+  // const init = async () => {
+  //   try {
+  //     const database = await localDatabase.init();
 
-      if (database && (await ModelManager.version.checkModelDirectory())) {
-        updateDatabase(database);
-        navigation.replace("user-login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (database && (await )) {
+  //       updateDatabase(database);
+  //       navigation.replace("user-login");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   useEffect(() => {
-    init();
+    ModelManager.version.checkModelDirectory();
+    setTimeout(() => {
+      navigation.replace("splash-login");
+    }, 2000);
   }, []);
   return (
     <SafeLayout

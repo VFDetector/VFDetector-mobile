@@ -1,13 +1,13 @@
 import * as tf from "@tensorflow/tfjs";
-import { bundleResourceIO, decodeJpeg } from "@tensorflow/tfjs-react-native";
+// import { bundleResourceIO } from "@tensorflow/tfjs-react-native";
 // import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as FileSystem from "expo-file-system";
+// import * as FileSystem from "expo-file-system";
 // import ImgToBase64 from "react-native-image-base64";
-import * as ImagePicker from "expo-image-picker";
-import base64 from "base-64";
-import config from "./config";
-import { decode } from "base-64";
-import { Buffer } from "buffer";
+// import * as ImagePicker from "expo-image-picker";
+// import base64 from "base-64";
+// import config from "./config";
+// import { decode } from "base-64";
+// import { Buffer } from "buffer";
 
 /**
  * init TF
@@ -48,18 +48,18 @@ const loadModel = async () => {
     // const modelWeights = new Uint8Array(Buffer.from(data, "base64"));
     // console.log(modelWeights)
 
-    try {
-      const model = await tf
-        .loadLayersModel(bundleResourceIO(modelArchitecture, modelWeights))
-        .catch((e) => {
-          console.log("[LOADING ERROR] info:", e);
-        });
-      console.log("[Loading infor] info:", "loaded");
-      return model;
-    } catch (e) {
-      console.log("[LOADING ERROR] info:", "failed");
-      console.log(e);
-    }
+    // try {
+    //   const model = await tf
+    //     .loadLayersModel(bundleResourceIO(modelArchitecture, modelWeights))
+    //     .catch((e) => {
+    //       console.log("[LOADING ERROR] info:", e);
+    //     });
+    //   console.log("[Loading infor] info:", "loaded");
+    //   return model;
+    // } catch (e) {
+    //   console.log("[LOADING ERROR] info:", "failed");
+    //   console.log(e);
+    // }
   } catch (error) {
     console.log(error);
   }

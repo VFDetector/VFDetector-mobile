@@ -2,34 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import assets from "src/assets";
-import { SafeLayout } from "src/layout";
+import { SafeLayout } from "src/layouts";
 import screen from "src/utils/screen";
 import model from "src/utils/models";
-import { useQuery } from "react-query";
-import { useLocalDatabase } from "src/contexts/localDatabase";
+// import { useQuery } from "react-query";
 
 const AppInitiation = ({ navigation }) => {
   const { colors } = useTheme();
   const [processLabel, setProcessLabel] = useState("Checking model version");
-  const { database } = useLocalDatabase();
   const init = async () => {
-    const version = await model.version.checkCurrentModelVersion();
-    setProcessLabel(`Found model version ${version}`);
-    const localVersion = await model.version.getCurrentLocalVersion(database);
+    const remoteVersion = await model.version.checkCurrentModelVersion();
+    setProcessLabel(`Found model version ${remoteVersion}`);
+    const localVersion = await model.version.getCurrentLocalVersion();
     await new Promise(async (resolve) => {
-      if (version === localVersion?.version) resolve();
+      if (remoteVersion === localVersion?.version) resolve();
       else {
         setProcessLabel("Updating process");
-        const downloadModelStatus = await model.version.download(
-          version,
-          database
-        );
+        const downloadModelStatus = await model.version.download(remoteVersion);
         if (downloadModelStatus == true) resolve();
       }
     });
     setProcessLabel("Loading model");
     await model.perform.init();
-    // navigation.replace("MainTabs");
+    // navigation.replace("home");
   };
   useEffect(() => {
     init();

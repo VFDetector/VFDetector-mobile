@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Button, useTheme } from "react-native-paper";
 import assets from "src/assets";
-import { SafeLayout } from "src/components/layout";
+import { SafeLayout } from "src/layouts";
 import screen from "src/utils/screen";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useMutation from "react-query";

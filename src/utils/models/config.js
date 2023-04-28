@@ -1,5 +1,6 @@
 import * as FileSystem from "expo-file-system";
 export default {
+  VERSION_KEY: "version-model",
   GIT_OWNER: "VFDetector",
   REPO: "VFDetector-30VNFoods-MobilenetV2",
   version_url: ".model-version",

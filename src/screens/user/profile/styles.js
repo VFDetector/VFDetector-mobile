@@ -7,7 +7,8 @@ export const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.gray,
+      backgroundColor: colors.white,
+      paddingHorizontal: 10,
     },
     accountTitle: {
       fontWeight: "bold",

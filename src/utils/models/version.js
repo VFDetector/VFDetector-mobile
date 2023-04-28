@@ -1,5 +1,9 @@
 import * as FileSystem from "expo-file-system";
 import config from "./config";
+import asyncStorage, {
+  get_storage_data,
+  set_storage_data,
+} from "src/utils/asyncStorage";
 
 const checkCurrentModelVersion = async () => {
   try {
@@ -49,17 +53,12 @@ const downloadFile = async (url, filePath) => {
   }
 };
 
-const getCurrentLocalVersion = async (database) => {
-  return new Promise((resolve, reject) => {
-    database.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM models ORDER BY updated_time DESC LIMIT 1;",
-        [],
-        (_, { rows: { _array } }) => resolve(_array[0]),
-        (_, error) => reject(error)
-      );
-    });
-  });
+const getCurrentLocalVersion = async () => {
+  try {
+    return JSON.parse(await get_storage_data(config.VERSION_KEY));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const updateNewestModel = async (newVersion, newUpdatedTime, database) => {
@@ -92,7 +91,7 @@ const updateNewestModel = async (newVersion, newUpdatedTime, database) => {
   });
 };
 
-const download = async (version, database) => {
+const download = async (version) => {
   try {
     const downloadedModel = await downloadFile(
       config.model(version),
@@ -107,9 +106,10 @@ const download = async (version, database) => {
       config.localDir.config
     );
     if (!!downloadedModel && !!downloadedWeight && !!downloadedConfig) {
-      await updateNewestModel(version, new Date().toISOString(), database)
-        .then((result) => console.log(result))
-        .catch((error) => console.error("Error updating newest model:", error));
+      await set_storage_data(
+        config.VERSION_KEY,
+        JSON.stringify({ version, updateTime: new Date().toISOString() })
+      );
       return true;
     }
   } catch (error) {
