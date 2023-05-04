@@ -1,4 +1,5 @@
 import * as FileSystem from "expo-file-system";
+import { get_storage_data, set_storage_data } from "src/utils/asyncStorage";
 import config from "./config";
 
 const checkCurrentModelVersion = async () => {
@@ -18,7 +19,7 @@ const checkCurrentModelVersion = async () => {
   }
 };
 
-const downloadFile = async (url, filePath) => {
+const downloadFile = async (url, filePath, updateLabelProcess) => {
   try {
     // Check if the file already exists
     const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -37,6 +38,10 @@ const downloadFile = async (url, filePath) => {
         const progress =
           downloadProgress.totalBytesWritten /
           downloadProgress.totalBytesExpectedToWrite;
+        if (updateLabelProcess)
+          updateLabelProcess(
+            progress * 100 > 1 ? (progress * 100).toFixed() : "-"
+          );
         // console.log(`Download progress: ${progress * 100}%`);
       }
     );
@@ -49,17 +54,12 @@ const downloadFile = async (url, filePath) => {
   }
 };
 
-const getCurrentLocalVersion = async (database) => {
-  return new Promise((resolve, reject) => {
-    database.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM models ORDER BY updated_time DESC LIMIT 1;",
-        [],
-        (_, { rows: { _array } }) => resolve(_array[0]),
-        (_, error) => reject(error)
-      );
-    });
-  });
+const getCurrentLocalVersion = async () => {
+  try {
+    return JSON.parse(await get_storage_data(config.VERSION_KEY));
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const updateNewestModel = async (newVersion, newUpdatedTime, database) => {
@@ -92,24 +92,28 @@ const updateNewestModel = async (newVersion, newUpdatedTime, database) => {
   });
 };
 
-const download = async (version, database) => {
+const download = async (version, updateLabel) => {
   try {
     const downloadedModel = await downloadFile(
       config.model(version),
-      config.localDir.architecture
+      config.localDir.architecture,
+      (percentage) => updateLabel(`Fetching model architecture(${percentage}%)`)
     );
     const downloadedWeight = await downloadFile(
       config.weight(version),
-      config.localDir.weight
+      config.localDir.weight,
+      (percentage) => updateLabel(`Fetching model weight(${percentage}%)`)
     );
     const downloadedConfig = await downloadFile(
       config.config(version),
-      config.localDir.config
+      config.localDir.config,
+      (percentage) => updateLabel(`Fetching metadata(${percentage}%)`)
     );
     if (!!downloadedModel && !!downloadedWeight && !!downloadedConfig) {
-      await updateNewestModel(version, new Date().toISOString(), database)
-        .then((result) => console.log(result))
-        .catch((error) => console.error("Error updating newest model:", error));
+      await set_storage_data(
+        config.VERSION_KEY,
+        JSON.stringify({ version, updateTime: new Date().toISOString() })
+      );
       return true;
     }
   } catch (error) {

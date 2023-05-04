@@ -1,0 +1,52 @@
+{
+  "labels": [
+    {
+      "name": "Bánh bèo",
+      "description": [
+        {
+          "text": "Bánh bèo là một món ăn truyền thống của Việt Nam, được chế biến từ bột gạo và có hình dáng giống như chiếc lá sen nhỏ nhắn. Bánh bèo được chia thành nhiều loại khác nhau như bánh bèo miền Trung, bánh bèo Huế, bánh bèo Nam Định, bánh bèo Bà Rịa - Vũng Tàu... Tùy theo từng loại, bánh bèo có cách chế biến và phục vụ khác nhau. Bánh bèo thường được ăn kèm với nước chấm, hành phi và tôm khô. Đây là một món ăn nhẹ nhàng, dễ ăn và thường được dùng trong các bữa tiệc, cỗ chay hoặc để ăn sáng."
+        }
+      ],
+      "type": [
+        {
+          "name": "01.png",
+          "title": "Bánh bèo Huế"
+        },
+        {
+          "name": "02.png",
+          "title": "Bánh bèo Nam Định"
+        }
+      ]
+    },
+    "Bánh bột lọc",
+    "Bánh căn",
+    "Bánh canh",
+    "Bánh chưng",
+    "Bánh cuốn",
+    "Bánh đúc",
+    "Bánh giof",
+    "Bánh khọt",
+    "Bánh mì",
+    "Bánh pía",
+    "Bánh tét",
+    "Bánh tráng nướng",
+    "Bánh xèo",
+    "Bún bò huế",
+    "Bún đậu mắm tôm",
+    "Bún mắm",
+    "Bún riêu",
+    "Bún thịt nướng",
+    "Cá kho tộ",
+    "Canh chua",
+    "Cao lầu",
+    "Cháo lòng",
+    "Cơm tấm",
+    "Gỏi cuốn",
+    "Hủ tiếu",
+    "Mì quảng",
+    "Nem chua",
+    "Phở",
+    "Xôi xéo"
+  ],
+  "version": "0.2.3"
+}

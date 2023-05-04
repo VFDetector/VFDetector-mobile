@@ -20,6 +20,19 @@ const init = async () => {
       );
     });
 
+    db.transaction((tx) => {
+      tx.executeSql(
+        "CREATE TABLE IF NOT EXISTS detectHistory (id INTEGER PRIMARY KEY AUTOINCREMENT, prediction INTEGER, detect_time DATETIME)",
+        [],
+        (_, result) => {
+          console.log("Table created successfully");
+        },
+        (_, error) => {
+          console.log("Error creating table", error);
+        }
+      );
+    });
+
     return db;
   } catch (error) {
     console.log(error);

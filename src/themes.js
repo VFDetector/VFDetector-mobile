@@ -5,17 +5,19 @@ const theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#007FE2",
+    primary: "#02B166",
     accent: "#f1c40f",
     error: "#E20000",
     white: "#FFF",
     lightBackground: "#EFEEF4",
     transparentWhite: (opacity) => `rgba(255, 255, 255, ${opacity})`,
     transparentBlack: (opacity) => `rgba(0, 0, 0, ${opacity})`,
-    transparentPrimary: (opacity) => `rgba(0,127,226, ${opacity})`,
+    transparentPrimary: (opacity) => `rgba(2,177,102, ${opacity})`,
+    transparentError: (opacity) => `rgba(255,0,0, ${opacity})`,
     light: "#FFF",
     dark: "#454852",
-    gray: "#F8F8F8",
+    gray: "#444545",
+    black: "#181A18",
   },
 };
 

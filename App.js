@@ -1,29 +1,38 @@
-import { StyleSheet } from "react-native";
-import "react-native-gesture-handler";
 import { Provider as PaperProvider } from "react-native-paper";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { NativeModules } from "react-native";
 import Navigation from "src/navigation";
 import theme from "src/themes";
-const queryClient = new QueryClient();
 import { LocalDBProvider } from "src/contexts/localDatabase";
+import { ModelProvider } from "src/contexts/modelContext";
+import { EditImageProvider } from "src/contexts/editImageContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { UserProvider } from "src/contexts/userContext";
+import { SnackbarProvider } from "src/contexts/snackBar";
 
-export default App = () => {
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental &&
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+const queryClient = new QueryClient();
+
+export default function App() {
   return (
-    <PaperProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <LocalDBProvider>
-          <Navigation />
-        </LocalDBProvider>
-      </QueryClientProvider>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <EditImageProvider>
+            <UserProvider>
+              <LocalDBProvider>
+                <ModelProvider>
+                  <SnackbarProvider>
+                    <Navigation />
+                  </SnackbarProvider>
+                </ModelProvider>
+              </LocalDBProvider>
+            </UserProvider>
+          </EditImageProvider>
+        </QueryClientProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+}

@@ -1,52 +1,73 @@
+import * as Crypto from "expo-crypto";
 import React, { useState } from "react";
 import {
-  Text,
-  View,
   KeyboardAvoidingView,
-  Image,
-  TextInput,
   StyleSheet,
+  TextInput,
+  View,
 } from "react-native";
-import { Button, useTheme } from "react-native-paper";
-import assets from "src/assets";
-import { SafeLayout } from "src/components/layout";
-import screen from "src/utils/screen";
+import { Button, Snackbar, useTheme } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import useMutation from "react-query";
+import { useMutation } from "react-query";
+import { useUserState } from "src/contexts/userContext";
+import { SafeLayout } from "src/layouts";
+import api from "src/utils/api";
+import screen from "src/utils/screen";
 
-export default ({ navigation, route }) => {
+export default ({ navigation }) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const { colors } = useTheme();
+  const [snackText, setSnackText] = useState(null);
   const styles = useStyle();
-  // const {isLoading} = useMutation(async () => {
-  //   await new Promise(
-  //     async resolve => {
-  //       setTimeout(() => {
-  //         resolve();
-  //       }, 3000);
-  //     },
-  //     {
-  //       mutationKey: 'login-mutation',
-  //     },
-  //   );
-  // });
+  const { updateUserData } = useUserState();
+
+  const { isLoading, mutate } = useMutation(async () => {
+    await new Promise(async (resolve) => {
+      try {
+        const passwordHash = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.MD5,
+          password
+        );
+        const resp = await api.requests.post(api.path.user.auth, {
+          username,
+          password: passwordHash,
+        });
+        if (resp?.error == 0) {
+          setSnackText("Authenticate successfully");
+          updateUserData(resp?.data);
+          navigation.pop();
+        } else setSnackText("Something went wrong with your login credential");
+        resolve();
+      } catch (error) {
+        console.log(error);
+        setSnackText("Something went wrong with your login credential");
+        resolve();
+      }
+    });
+  });
   return (
-    <SafeLayout style={{ flex: 1 }} edges={["top", "bottom"]}>
+    <SafeLayout
+      title="Login"
+      popback
+      style={{ flex: 1 }}
+      edges={["top", "bottom"]}
+    >
+      <Snackbar
+        visible={!!snackText}
+        onDismiss={() => setSnackText(null)}
+        duration={2000}
+      >
+        {snackText}
+      </Snackbar>
       <KeyboardAvoidingView
         behavior="padding"
         style={{
           flex: 1,
-          justifyContent: "center",
+          // justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Image
-          style={{ width: screen.width / 3, height: screen.width / 3 }}
-          source={assets.appIcon}
-          resizeMode="contain"
-        />
-        <Text style={{ fontWeight: "bold", fontSize: 20 }}>Food Detection</Text>
         <View style={styles.inputContainer}>
           <TextInput
             label="Username"
@@ -77,10 +98,11 @@ export default ({ navigation, route }) => {
             <Icon name="chevron-right" size={24} color={colors.white} />
           )}
           mode="contained"
-          onPress={() => navigation.replace("splash-login")}
+          onPress={() => mutate()}
           style={styles.loginButton}
           contentStyle={styles.loginButtonContent}
-          loading={false}
+          loading={isLoading}
+          disabled={isLoading}
         >
           Login
         </Button>

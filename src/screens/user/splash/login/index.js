@@ -1,57 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { Image, View } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import assets from "src/assets";
-import { SafeLayout } from "src/layout";
-import screen from "src/utils/screen";
+import { useModelState } from "src/contexts/modelContext";
+import { SafeLayout } from "src/layouts";
 import model from "src/utils/models";
-import { useQuery } from "react-query";
-import { useLocalDatabase } from "src/contexts/localDatabase";
+import screen from "src/utils/screen";
+import { useKeepAwake } from "expo-keep-awake";
 
 const AppInitiation = ({ navigation }) => {
   const { colors } = useTheme();
+  const { setModel, updateMetadata } = useModelState();
+  const styles = useStyle();
   const [processLabel, setProcessLabel] = useState("Checking model version");
-  const { database } = useLocalDatabase();
+  useKeepAwake();
   const init = async () => {
-    const version = await model.version.checkCurrentModelVersion();
-    setProcessLabel(`Found model version ${version}`);
-    const localVersion = await model.version.getCurrentLocalVersion(database);
+    const remoteVersion = await model.version.checkCurrentModelVersion();
+    setProcessLabel(`Found model version ${remoteVersion}`);
+    const localVersion = await model.version.getCurrentLocalVersion();
     await new Promise(async (resolve) => {
-      if (version === localVersion?.version) resolve();
+      if (remoteVersion === localVersion?.version) resolve();
       else {
-        setProcessLabel("Updating process");
+        setProcessLabel("Updating process, fetching data");
         const downloadModelStatus = await model.version.download(
-          version,
-          database
+          remoteVersion,
+          setProcessLabel
         );
-        if (downloadModelStatus == true) resolve();
+        if (downloadModelStatus == true) {
+          await model.metadata.fetchMetadata(remoteVersion, setProcessLabel);
+          resolve();
+        }
       }
     });
+    setProcessLabel("Process metadata");
+    await model.metadata.process(
+      updateMetadata,
+      remoteVersion,
+      setProcessLabel
+    );
     setProcessLabel("Loading model");
-    await model.perform.init();
-    // navigation.replace("MainTabs");
+    const loadedModel = await model.perform.init();
+    if (loadedModel) {
+      setModel(loadedModel);
+      navigation?.replace("home");
+    }
   };
   useEffect(() => {
     init();
   }, []);
   return (
-    <SafeLayout
-      edges={["bottom", "top"]}
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    >
+    <SafeLayout edges={["bottom", "top"]} contentStyle={styles.container}>
       <Image
-        style={{ width: screen.width / 3, height: screen.width / 3 }}
+        style={styles.appIcon}
         source={assets.appIcon}
         resizeMode="contain"
       />
-      <Text style={{ fontWeight: "bold", fontSize: 20 }}>Food Detection</Text>
+      <Text style={styles.appTitle}>Food Detection</Text>
       <ActivityIndicator
-        style={{ marginTop: screen.width / 3 }}
+        style={styles.loader}
         color={colors.dark}
         animating={true}
       />
-      <Text style={{ marginTop: 10, fontWeight: "bold" }}>{processLabel}</Text>
+      <Text style={styles.processLabel}>{processLabel}</Text>
     </SafeLayout>
   );
+};
+
+const useStyle = () => {
+  const { colors } = useTheme();
+  return StyleSheet.create({
+    container: {
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    appTitle: {
+      fontWeight: "bold",
+      fontSize: 20,
+    },
+    loader: {
+      marginTop: screen.width / 3,
+    },
+    processLabel: {
+      marginTop: 10,
+      fontWeight: "bold",
+      textAlign: "center",
+      marginHorizontal: 20,
+    },
+    appIcon: {
+      width: screen.width / 3,
+      height: screen.width / 3,
+    },
+  });
 };
 export default AppInitiation;
