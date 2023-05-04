@@ -1,9 +1,6 @@
 import * as FileSystem from "expo-file-system";
+import { get_storage_data, set_storage_data } from "src/utils/asyncStorage";
 import config from "./config";
-import asyncStorage, {
-  get_storage_data,
-  set_storage_data,
-} from "src/utils/asyncStorage";
 
 const checkCurrentModelVersion = async () => {
   try {
@@ -22,7 +19,7 @@ const checkCurrentModelVersion = async () => {
   }
 };
 
-const downloadFile = async (url, filePath) => {
+const downloadFile = async (url, filePath, updateLabelProcess) => {
   try {
     // Check if the file already exists
     const fileExists = await FileSystem.getInfoAsync(filePath);
@@ -41,6 +38,10 @@ const downloadFile = async (url, filePath) => {
         const progress =
           downloadProgress.totalBytesWritten /
           downloadProgress.totalBytesExpectedToWrite;
+        if (updateLabelProcess)
+          updateLabelProcess(
+            progress * 100 > 1 ? (progress * 100).toFixed() : "-"
+          );
         // console.log(`Download progress: ${progress * 100}%`);
       }
     );
@@ -91,19 +92,22 @@ const updateNewestModel = async (newVersion, newUpdatedTime, database) => {
   });
 };
 
-const download = async (version) => {
+const download = async (version, updateLabel) => {
   try {
     const downloadedModel = await downloadFile(
       config.model(version),
-      config.localDir.architecture
+      config.localDir.architecture,
+      (percentage) => updateLabel(`Fetching model architecture(${percentage}%)`)
     );
     const downloadedWeight = await downloadFile(
       config.weight(version),
-      config.localDir.weight
+      config.localDir.weight,
+      (percentage) => updateLabel(`Fetching model weight(${percentage}%)`)
     );
     const downloadedConfig = await downloadFile(
       config.config(version),
-      config.localDir.config
+      config.localDir.config,
+      (percentage) => updateLabel(`Fetching metadata(${percentage}%)`)
     );
     if (!!downloadedModel && !!downloadedWeight && !!downloadedConfig) {
       await set_storage_data(

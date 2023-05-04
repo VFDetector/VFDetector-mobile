@@ -31,7 +31,7 @@ const useStyle = () => {
     container: (active) => ({
       position: "absolute",
       zIndex: 2,
-      top: active ? insets.top : -100,
+      top: active ? 0 : -100,
       right: 10,
     }),
     buttonContainer: {

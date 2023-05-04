@@ -17,7 +17,7 @@ export default RequestPermission = () => {
     }
   };
   return (
-    <SafeLayout style={styles.container}>
+    <SafeLayout contentStyle={styles.container}>
       <View style={styles.iconContainer}>
         <Icon name="cog" size={40} color={colors.primary} />
         <Icon name="camera" size={40} color={colors.primary} />

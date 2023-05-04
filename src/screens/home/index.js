@@ -1,20 +1,17 @@
+import { Camera } from "expo-camera";
 import React, { useEffect, useState } from "react";
-import { Text, useTheme } from "react-native-paper";
-import { LayoutAnimation, StyleSheet } from "react-native";
-import screen from "src/utils/screen";
-import CaptureButton from "./components/captureButton";
+import { LayoutAnimation } from "react-native";
 import { SafeLayout } from "src/layouts";
-import { Camera, CameraType } from "expo-camera";
-import RequestPermision from "./requestPermision";
-import ProfileButton from "./components/profileButton";
-import CancelButton from "./components/cancelButton";
 import BottomSheet from "./bottomSheet";
+import CameraLayout from "./cameraLayout";
+import CancelButton from "./components/cancelButton";
+import CaptureButton from "./components/captureButton";
+import ProfileButton from "./components/profileButton";
+import RequestPermision from "./requestPermision";
 
-export default ({ navigation, route }) => {
-  const { colors } = useTheme();
+export default () => {
   const [activeDetect, setActiveDetect] = useState(false);
   const [activeLayout, setActiveLayout] = useState(true);
-  const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const checkPermission = async () => {
     if (!permission) {
@@ -28,11 +25,9 @@ export default ({ navigation, route }) => {
   if (!permission?.granted) return <RequestPermision />;
   return (
     <>
-      {permission?.granted && activeDetect && (
-        <Camera style={StyleSheet.absoluteFill} type={type}></Camera>
-      )}
+      <CameraLayout permission={permission} activeDetect={activeDetect} />
       <SafeLayout
-        style={{
+        contentStyle={{
           alignItems: "center",
           justifyContent: "center",
         }}

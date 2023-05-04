@@ -6,9 +6,7 @@ export const useStyle = () => {
   const { colors } = useTheme();
   return StyleSheet.create({
     container: {
-      flex: 1,
       backgroundColor: colors.white,
-      paddingHorizontal: 10,
     },
     accountTitle: {
       fontWeight: "bold",
@@ -22,6 +20,9 @@ export const useStyle = () => {
       fontSize: 20,
       marginTop: 20,
       marginBottom: 8,
+    },
+    scrollView: {
+      paddingHorizontal: 10,
     },
   });
 };
